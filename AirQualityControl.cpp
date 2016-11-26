@@ -15,7 +15,6 @@
 #define AIR_QUALITY_VERY_BAD 3
 #define AIR_QUALITY_UNKNOWN 255
 
-// http://monitoring.krakow.pios.gov.pl/indeks-jakosci-powietrza
 #define PM_10_VERY_BAD 50
 #define PM_10_VERY_BAD_LOW 45
 #define PM_10_BAD 25
