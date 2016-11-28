@@ -40,16 +40,14 @@ private:
   RGBLed* rgbLed;
   Buzzer* buzzer;
   LightSensor* lightSensor;
-  byte autoModeLedPin;  
 
 public:
-  AirQualityControl(DustSensor* dustSensor, Fan* fan, RGBLed* rgbLed, Buzzer* buzzer, LightSensor* lightSensor, byte autoModeLedPin) { 
+  AirQualityControl(DustSensor* dustSensor, Fan* fan, RGBLed* rgbLed, Buzzer* buzzer, LightSensor* lightSensor) { 
     this->dustSensor = dustSensor; 
     this->fan = fan;
     this->rgbLed = rgbLed;
     this->buzzer = buzzer;  
     this->lightSensor = lightSensor;  
-    this->autoModeLedPin = autoModeLedPin;
   }
 
   void update() {
@@ -77,12 +75,6 @@ public:
         setAirQuality(airQualityLevel);  
       }
     }
-
-    if (autoMode && !lightSensor->isNight()) {
-      digitalWrite(autoModeLedPin, HIGH);   
-    } else {
-      digitalWrite(autoModeLedPin, LOW);   
-    }
   }
 
   void setAutoMode(boolean enabled) {
@@ -91,10 +83,8 @@ public:
         controlFanByAirQualityLevel(airQualityLevel);
       }
       autoMode = true; 
-      digitalWrite(autoModeLedPin, HIGH); 
     } else {
       autoMode = false;
-      digitalWrite(autoModeLedPin, LOW);
     }
   }
 
