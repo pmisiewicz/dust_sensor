@@ -16,18 +16,12 @@
 #define AIR_QUALITY_UNKNOWN 255
 
 #define PM_10_VERY_BAD 50
-#define PM_10_VERY_BAD_LOW 45
 #define PM_10_BAD 25
-#define PM_10_BAD_LOW 20
 #define PM_10_GOOD 15
-#define PM_10_GOOD_LOW 10
 
 #define PM_2_5_VERY_BAD 25
-#define PM_2_5_VERY_BAD_LOW 20
 #define PM_2_5_BAD 15
-#define PM_2_5_BAD_LOW 10
 #define PM_2_5_GOOD 8
-#define PM_2_5_GOOD_LOW 5
 
 class AirQualityControl {
 
@@ -57,23 +51,11 @@ public:
     if (pm10 > PM_10_VERY_BAD || pm2_5 > PM_2_5_VERY_BAD) {
       setAirQuality(AIR_QUALITY_VERY_BAD);
     } else if (pm10 > PM_10_BAD || pm2_5 > PM_2_5_BAD) {
-      if (airQualityLevel <= AIR_QUALITY_BAD || (pm10 <= PM_10_VERY_BAD_LOW && pm2_5 <= PM_2_5_VERY_BAD_LOW)) {
-        setAirQuality(AIR_QUALITY_BAD);
-      } else {
-        setAirQuality(airQualityLevel);  
-      }
+      setAirQuality(AIR_QUALITY_BAD);
     } else if (pm10 > PM_10_GOOD || pm2_5 > PM_2_5_GOOD) {
-      if (airQualityLevel <= AIR_QUALITY_GOOD || (pm10 <= PM_10_BAD_LOW && pm2_5 <= PM_2_5_BAD_LOW)) {
-        setAirQuality(AIR_QUALITY_GOOD);
-      } else {
-        setAirQuality(airQualityLevel);  
-      }
+      setAirQuality(AIR_QUALITY_GOOD);
     } else {
-      if (airQualityLevel <= AIR_QUALITY_PERFECT || (pm10 <= PM_10_GOOD_LOW && pm2_5 <= PM_2_5_GOOD_LOW)) {
-        setAirQuality(AIR_QUALITY_PERFECT);
-      } else {
-        setAirQuality(airQualityLevel);  
-      }
+      setAirQuality(AIR_QUALITY_PERFECT);
     }
   }
 
@@ -93,27 +75,27 @@ private:
   void setAirQuality(byte level) {
     if (level == AIR_QUALITY_VERY_BAD) {
       rgbLed->red();
-      if (airQualityLevel != AIR_QUALITY_VERY_BAD && autoMode) {
-        controlFanByAirQualityLevel(level);
+      if (airQualityLevel != AIR_QUALITY_VERY_BAD && autoMode) {        
         buzzer->sound(80, 50, 4);
+        controlFanByAirQualityLevel(level);
       }   
     } else if (level == AIR_QUALITY_BAD) {
       rgbLed->yellow();
-      if (airQualityLevel != AIR_QUALITY_BAD && autoMode) {
-        controlFanByAirQualityLevel(level);
+      if (airQualityLevel != AIR_QUALITY_BAD && autoMode) {        
         buzzer->sound(400, 50, 3);
+        controlFanByAirQualityLevel(level);
       }   
     } else if (level == AIR_QUALITY_GOOD) {
       rgbLed->green();
-      if (airQualityLevel != AIR_QUALITY_GOOD && autoMode) {
-        controlFanByAirQualityLevel(level);
+      if (airQualityLevel != AIR_QUALITY_GOOD && autoMode) {        
         buzzer->sound(1000, 50, 2);
+        controlFanByAirQualityLevel(level);
       }   
     } else if (level == AIR_QUALITY_PERFECT) {
       rgbLed->blue();
-      if (airQualityLevel != AIR_QUALITY_PERFECT && autoMode) {
-        controlFanByAirQualityLevel(level);
+      if (airQualityLevel != AIR_QUALITY_PERFECT && autoMode) {        
         buzzer->sound(3000, 50, 1);
+        controlFanByAirQualityLevel(level);
       }   
     }    
   

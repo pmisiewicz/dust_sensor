@@ -63,14 +63,14 @@ public:
     }
     
     if (targetPower > power) {
-      for (byte i=power; i<targetPower; i++) {
+      for (byte i=max(power, 50); i<targetPower; i++) {
         analogWrite(fanPwmPin, i);
-        delay(25);
+        delay(50);
       }
     } else {
       for (byte i=power; i>targetPower; i--) {
         analogWrite(fanPwmPin, i);
-        delay(25);
+        delay(50);
       } 
     }
 
