@@ -16,8 +16,8 @@
 #define lcdLightPin 5
 #define buzzerPin 6
 #define buttonPin 7
+#define dhtPin 8
 #define fanPwmPin 10
-#define dhtPin 11
 #define irPin 12
 #define fanLedPin 13
 
@@ -91,19 +91,6 @@ void startSequence() {
   for (byte i=1; i<=5; i++) {
     buzzer->sound(500 + i*100, 100);
   }
-
-  fan->setMode(1);
-  delay(5000);
-  fan->setMode(2);
-  delay(5000);
-  fan->setMode(3);
-  delay(5000);
-  fan->setMode(2);
-  delay(5000);
-  fan->setMode(1);
-  delay(5000);
-  fan->setMode(0);
-  delay(5000);
 }
 
 void loop() {  

@@ -42,7 +42,7 @@ public:
         changePower(0);
         break;
       case FAN_MODE_1:
-        changePower(95);
+        changePower(100);
         break;
       case FAN_MODE_2:
         changePower(185);
