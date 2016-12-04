@@ -85,8 +85,7 @@ void startSequence() {
   lcd->setCursor(0, 1);
   lcd->print(F("   POWIETRZA    ")); 
 
-  fan->setMode(FAN_MODE_OFF); 
-  airQualityControl->setAutoMode(true);
+  fan->changePower(0); 
 
   for (byte i=1; i<=5; i++) {
     buzzer->sound(500 + i*100, 100);

@@ -27,7 +27,6 @@ class AirQualityControl {
 
 private: 
   byte airQualityLevel = AIR_QUALITY_GOOD;  
-  boolean autoMode = true;
 
   DustSensor* dustSensor;
   Fan* fan;
@@ -57,17 +56,8 @@ public:
     } else {
       setAirQuality(AIR_QUALITY_PERFECT);
     }
-  }
 
-  void setAutoMode(boolean enabled) {
-    if (enabled) {
-      if (!autoMode) {
-        controlFanByAirQualityLevel(airQualityLevel);
-      }
-      autoMode = true; 
-    } else {
-      autoMode = false;
-    }
+    controlFan(pm10, pm2_5);
   }
 
 private:
@@ -75,48 +65,40 @@ private:
   void setAirQuality(byte level) {
     if (level == AIR_QUALITY_VERY_BAD) {
       rgbLed->red();
-      if (airQualityLevel != AIR_QUALITY_VERY_BAD && autoMode) {        
+      if (airQualityLevel != AIR_QUALITY_VERY_BAD) {        
         buzzer->sound(80, 50, 4);
-        controlFanByAirQualityLevel(level);
       }   
     } else if (level == AIR_QUALITY_BAD) {
       rgbLed->yellow();
-      if (airQualityLevel != AIR_QUALITY_BAD && autoMode) {        
+      if (airQualityLevel != AIR_QUALITY_BAD) {        
         buzzer->sound(400, 50, 3);
-        controlFanByAirQualityLevel(level);
       }   
     } else if (level == AIR_QUALITY_GOOD) {
       rgbLed->green();
-      if (airQualityLevel != AIR_QUALITY_GOOD && autoMode) {        
+      if (airQualityLevel != AIR_QUALITY_GOOD) {        
         buzzer->sound(1000, 50, 2);
-        controlFanByAirQualityLevel(level);
       }   
     } else if (level == AIR_QUALITY_PERFECT) {
       rgbLed->blue();
-      if (airQualityLevel != AIR_QUALITY_PERFECT && autoMode) {        
+      if (airQualityLevel != AIR_QUALITY_PERFECT) {        
         buzzer->sound(3000, 50, 1);
-        controlFanByAirQualityLevel(level);
       }   
     }    
   
     airQualityLevel = level;
   }
   
-  void controlFanByAirQualityLevel(byte level) {
-    switch (level) {
-      case AIR_QUALITY_PERFECT:
-        fan->setMode(FAN_MODE_OFF);
-        break;
-      case AIR_QUALITY_GOOD:
-        fan->setMode(FAN_MODE_1);
-        break;
-      case AIR_QUALITY_BAD:
-        fan->setMode(FAN_MODE_2);
-        break;
-      case AIR_QUALITY_VERY_BAD:
-        fan->setMode(FAN_MODE_3);
-        break;
+  void controlFan(int pm10, int pm2_5) {
+    byte pm10Perc = (byte) (double) pm10 / (double) PM_10_VERY_BAD * 100.0; 
+    byte pm2_5Perc = (byte) (double) pm2_5 / (double) PM_2_5_VERY_BAD * 100.0; 
+    byte levelPerc = max(pm10Perc, pm2_5Perc);
+
+    byte power = 0;
+    if (levelPerc > 25) {
+      power = levelPerc * 255/100;  
     }
+
+    fan->changePower(power); 
   }
 };
 

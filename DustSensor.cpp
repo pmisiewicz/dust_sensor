@@ -42,8 +42,8 @@ private:
   unsigned long powerSaveLastCollectingTime = 0;
 
   boolean correction = true;
-
-  byte ignoredSamples = 0;
+  boolean firstRun = true;
+  byte ignoredSamples = 0;  
 
   PCF8574* expander;
   TemperatureSensor* temperatureSensor;
@@ -124,6 +124,7 @@ public:
         powerSaveCollecting = false;
         powerSaveLastCollectingTime = timeMillis();
         ignoredSamples = 0;
+        firstRun = false;
         sleep();
       } else if (!powerSaveCollecting) {
         sleep();
@@ -137,7 +138,7 @@ public:
     if (Serial.find(0x42)) {
       Serial.readBytes(buf, LENG);
 
-      if (ignoredSamples < IGNORED_SAMPLES_ON_START) {
+      if (!firstRun && ignoredSamples < IGNORED_SAMPLES_ON_START) {
         ignoredSamples++;
         if (samplingMode != SAMPLING_MODE_CONTINUOUS) {
           return;  
