@@ -18,7 +18,6 @@
 #define buttonPin 7
 #define dhtPin 8
 #define fanPwmPin 10
-#define irPin 12
 #define fanLedPin 13
 
 // Expander pins
@@ -41,8 +40,6 @@ RGBLed* rgbLed = new RGBLed(expander, redPin, greenPin, bluePin);
 Buzzer* buzzer = new Buzzer(buzzerPin);
 LightSensor* lightSensor = new LightSensor(fotoPin);
 AirQualityControl* airQualityControl = new AirQualityControl(dustSensor, fan, rgbLed, buzzer, lightSensor);
-
-boolean discoMode = false;
 
 void setup() {
   Serial.begin(9600);
@@ -95,8 +92,8 @@ void startSequence() {
 void loop() {  
   lightSensor->update();
     
-  rgbLed->setEnabled(!lightSensor->isNight() || discoMode);
-  buzzer->setEnabled(!lightSensor->isNight() || discoMode);   
+  rgbLed->setEnabled(!lightSensor->isNight());
+  buzzer->setEnabled(!lightSensor->isNight());   
 
   dustSensor->update();  
   temperatureSensor->update();
@@ -104,13 +101,9 @@ void loop() {
   handleLCD();  
 
   if (digitalRead(buttonPin) == HIGH) {
-    discoMode = !discoMode;  
+    buzzer->sound(1000, 50);
+    dustSensor->nextSamplingMode();
     delay(250);
-  }
-
-  if (discoMode) {
-    rgbLed->randomColor();
-    buzzer->sound(random(100, 2000), random(5, 50));
   }
 
   delay(100);

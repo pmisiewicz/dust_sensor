@@ -94,7 +94,10 @@ private:
     byte levelPerc = max(pm10Perc, pm2_5Perc);
 
     byte power = 0;
-    if (levelPerc > 25) {
+    
+    if (levelPerc >= 100) {
+      power = 255;  
+    } else if (levelPerc > 25) {      
       power = levelPerc * 255/100;  
     }
 
