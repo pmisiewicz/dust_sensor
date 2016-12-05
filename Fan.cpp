@@ -6,6 +6,8 @@
 #ifndef FAN_CPP
 #define FAN_CPP
 
+#define MIN_POWER 50
+
 class Fan {
 
 private:
@@ -33,7 +35,9 @@ public:
       digitalWrite(fanLedPin, LOW);    
     }
     
-    if (targetPower > power) {
+    if (targetPower <= MIN_POWER) {
+      analogWrite(fanPwmPin, MIN_POWER);  
+    } else if (targetPower > power) {
       for (int i=max(power, 50); i<=targetPower; i++) {   
         analogWrite(fanPwmPin, i);
         delay(15);
