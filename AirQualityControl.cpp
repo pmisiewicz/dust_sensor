@@ -89,9 +89,9 @@ private:
   }
   
   void controlFan(int pm10, int pm2_5) {
-    byte pm10Perc = (byte) (double) pm10 / (double) PM_10_VERY_BAD * 100.0; 
-    byte pm2_5Perc = (byte) (double) pm2_5 / (double) PM_2_5_VERY_BAD * 100.0; 
-    byte levelPerc = max(pm10Perc, pm2_5Perc);
+    double pm10Perc = (double) pm10 / (double) PM_10_VERY_BAD * 100.0; 
+    double pm2_5Perc = (double) pm2_5 / (double) PM_2_5_VERY_BAD * 100.0; 
+    double levelPerc = max(pm10Perc, pm2_5Perc);
 
     byte power = 0;
     
