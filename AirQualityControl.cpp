@@ -49,12 +49,16 @@ public:
     
     if (pm10 > PM_10_VERY_BAD || pm2_5 > PM_2_5_VERY_BAD) {
       setAirQuality(AIR_QUALITY_VERY_BAD);
+      dustSensor->setSamplingMode(SAMPLING_MODE_AVG);
     } else if (pm10 > PM_10_BAD || pm2_5 > PM_2_5_BAD) {
       setAirQuality(AIR_QUALITY_BAD);
+      dustSensor->setSamplingMode(SAMPLING_MODE_AVG);
     } else if (pm10 > PM_10_GOOD || pm2_5 > PM_2_5_GOOD) {
       setAirQuality(AIR_QUALITY_GOOD);
+      dustSensor->setSamplingMode(SAMPLING_MODE_POWERSAVE);
     } else {
       setAirQuality(AIR_QUALITY_PERFECT);
+      dustSensor->setSamplingMode(SAMPLING_MODE_POWERSAVE);
     }
 
     controlFan(pm10, pm2_5);

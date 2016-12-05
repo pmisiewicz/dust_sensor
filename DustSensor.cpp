@@ -76,6 +76,18 @@ public:
     expander->digitalWrite(sleepPin, LOW); 
   }
 
+  void setSamplingMode(byte targetMode) {
+    if (samplingMode == targetMode) {
+      return;
+    }
+
+    samplingMode = targetMode; 
+    powerSaveCollecting = false;
+    powerSaveLastCollectingTime = 0;
+    ignoredSamples = 0;
+    wake();        
+  }
+
   void update() {
     if (samplingMode == SAMPLING_MODE_POWERSAVE) {
       if (!powerSaveCollecting && powerSaveLastCollectingTime < timeMillis() - SAMPLING_MODE_POWERSAVE_SLEEP_MILLIS) {
@@ -116,7 +128,6 @@ public:
       }
     }
   }
-
 
 private:
  
