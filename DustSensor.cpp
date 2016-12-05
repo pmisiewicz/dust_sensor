@@ -28,8 +28,8 @@ private:
  
   unsigned char buf[LENG];
 
-  int currentDustLevelPM2_5 = 0;
-  int currentDustLevelPM10 = 0;
+  float currentDustLevelPM2_5 = 0;
+  float currentDustLevelPM10 = 0;
 
   int dustSampleIdx = 0;
   
@@ -41,7 +41,6 @@ private:
   boolean powerSaveCollecting = false;
   unsigned long powerSaveLastCollectingTime = 0;
 
-  boolean correction = true;
   boolean firstRun = true;
   byte ignoredSamples = 0;  
 
@@ -63,11 +62,11 @@ public:
     }
   }
 
-  int getPM2_5() { 
+  float getPM2_5() { 
     return currentDustLevelPM2_5; 
   }
 
-  int getPM10() { 
+  float getPM10() { 
     return currentDustLevelPM10; 
   }
 
@@ -93,24 +92,11 @@ public:
       pm10Samples[i] = -1;
     }
   }
-
-  byte getSamplingMode() { 
-    return samplingMode; 
-  }
-
   void reset() {
     samplingMode = DEFAULT_SAMPLING_MODE;
     powerSaveCollecting = false;
     powerSaveLastCollectingTime = 0;
     ignoredSamples = 0;
-  }
-
-  void setCorrection(boolean c) {
-    correction = c;  
-  }
-
-  boolean isCorrection() {
-    return correction;
   }
 
   void update() {
@@ -162,10 +148,8 @@ private:
   void calculateDustLevels(int PM01Value, int PM2_5Value, int PM10Value) {
     int humidity = temperatureSensor->lastReading().h;
 
-    if (correction) {
-      PM2_5Value = numericCorrectionPM2_5(PM2_5Value, humidity);
-      PM10Value = numericCorrectionPM10(PM10Value, humidity);
-    }
+    PM2_5Value = numericCorrectionPM2_5(PM2_5Value, humidity);
+    PM10Value = numericCorrectionPM10(PM10Value, humidity);
 
     pm2_5Samples[dustSampleIdx] = PM2_5Value;
     pm10Samples[dustSampleIdx] = PM10Value;
@@ -173,8 +157,8 @@ private:
     dustSampleIdx++;
     dustSampleIdx = dustSampleIdx % DUST_SAMPLES_CNT;
 
-    int sumDustLevelPM2_5 = 0;
-    int sumDustLevelPM10 = 0;
+    float sumDustLevelPM2_5 = 0;
+    float sumDustLevelPM10 = 0;
     int validSamplesCnt = 0;
 
     for (int i = 0; i < DUST_SAMPLES_CNT; i++) {
@@ -189,25 +173,25 @@ private:
       currentDustLevelPM2_5 = PM2_5Value;
       currentDustLevelPM10 = PM10Value;
     } else {
-      currentDustLevelPM2_5 = (int)(sumDustLevelPM2_5 / validSamplesCnt);
-      currentDustLevelPM10 = (int)(sumDustLevelPM10 / validSamplesCnt);
+      currentDustLevelPM2_5 = sumDustLevelPM2_5 / validSamplesCnt;
+      currentDustLevelPM10 = sumDustLevelPM10 / validSamplesCnt;
     }    
   }
  
-  int numericCorrectionPM2_5(int raw, int humidity) {
+  float numericCorrectionPM2_5(float raw, float humidity) {
     double cpa = 1.00123;
     double cpb = 1.96141;
     double cpc = 1.0;
     double divider = cpc + cpa * pow((humidity / 100.0), cpb);
-    return (int) ((double) raw / divider + 0.5);  
+    return raw / divider + 0.5;  
   }
 
-  int numericCorrectionPM10(int raw, int humidity) {
+  float numericCorrectionPM10(float raw, float humidity) {
     double cpa = 1.15866;
     double cpb = 3.16930;
     double cpc = 0.7;
     double divider = cpc + cpa * pow((humidity / 100.0), cpb);
-    return (int) ((double) raw / divider + 0.5);   
+    return raw / divider + 0.5;   
   }
  
   char checkValue(unsigned char* thebuf, char leng) {

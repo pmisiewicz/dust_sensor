@@ -122,11 +122,11 @@ void handleLCD() {
   
   lcd->setCursor(0, 0);
   lcd->print(F("2.5: "));
-  lcd->print(dustSensor->getPM2_5()); 
+  lcd->print((int) dustSensor->getPM2_5()); 
   lcd->print(F(" ")); 
   
   lcd->print(F("10: "));
-  lcd->print(dustSensor->getPM10());
+  lcd->print((int) dustSensor->getPM10());
   lcd->print(F("    "));
 
   lcd->setCursor(0, 1);

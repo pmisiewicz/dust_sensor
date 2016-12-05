@@ -44,8 +44,8 @@ public:
   }
 
   void update() {
-    int pm10 = dustSensor->getPM10();
-    int pm2_5 = dustSensor->getPM2_5();
+    float pm10 = dustSensor->getPM10();
+    float pm2_5 = dustSensor->getPM2_5();
     
     if (pm10 > PM_10_VERY_BAD || pm2_5 > PM_2_5_VERY_BAD) {
       setAirQuality(AIR_QUALITY_VERY_BAD);
@@ -88,10 +88,10 @@ private:
     airQualityLevel = level;
   }
   
-  void controlFan(int pm10, int pm2_5) {
-    double pm10Perc = (double) pm10 / (double) PM_10_VERY_BAD * 100.0; 
-    double pm2_5Perc = (double) pm2_5 / (double) PM_2_5_VERY_BAD * 100.0; 
-    double levelPerc = max(pm10Perc, pm2_5Perc);
+  void controlFan(float pm10, float pm2_5) {
+    float pm10Perc = pm10 / PM_10_VERY_BAD * 100.0; 
+    float pm2_5Perc = pm2_5 / PM_2_5_VERY_BAD * 100.0; 
+    float levelPerc = max(pm10Perc, pm2_5Perc);
 
     byte power = 0;
     
