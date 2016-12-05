@@ -11,11 +11,10 @@
 
 #define DUST_SAMPLES_CNT 50
 
-#define SAMPLING_MODE_CONTINUOUS 0
 #define SAMPLING_MODE_AVG 1
 #define SAMPLING_MODE_POWERSAVE 2
 
-#define DEFAULT_SAMPLING_MODE SAMPLING_MODE_POWERSAVE
+#define DEFAULT_SAMPLING_MODE SAMPLING_MODE_AVG
 
 #define SAMPLING_MODE_POWERSAVE_COLLECT_MILLIS 1000ul * 60ul * 1ul
 #define SAMPLING_MODE_POWERSAVE_SLEEP_MILLIS 1000ul * 60ul * 5ul
@@ -48,7 +47,6 @@ private:
   TemperatureSensor* temperatureSensor;
   byte sleepPin;
 
-
 public:
 
   DustSensor(PCF8574* expander, TemperatureSensor* temperatureSensor, byte sleepPin) {
@@ -78,27 +76,6 @@ public:
     expander->digitalWrite(sleepPin, LOW); 
   }
 
-  void nextSamplingMode() {
-    samplingMode++;
-    if (samplingMode > SAMPLING_MODE_POWERSAVE) {
-      samplingMode = SAMPLING_MODE_CONTINUOUS;
-    }
-
-    powerSaveCollecting = false;
-    powerSaveLastCollectingTime = 0;
-
-    for (int i = 0; i < DUST_SAMPLES_CNT; i++) {
-      pm2_5Samples[i] = -1;
-      pm10Samples[i] = -1;
-    }
-  }
-  void reset() {
-    samplingMode = DEFAULT_SAMPLING_MODE;
-    powerSaveCollecting = false;
-    powerSaveLastCollectingTime = 0;
-    ignoredSamples = 0;
-  }
-
   void update() {
     if (samplingMode == SAMPLING_MODE_POWERSAVE) {
       if (!powerSaveCollecting && powerSaveLastCollectingTime < timeMillis() - SAMPLING_MODE_POWERSAVE_SLEEP_MILLIS) {
@@ -126,9 +103,7 @@ public:
 
       if (!firstRun && ignoredSamples < IGNORED_SAMPLES_ON_START) {
         ignoredSamples++;
-        if (samplingMode != SAMPLING_MODE_CONTINUOUS) {
-          return;  
-        }
+        return; 
       }
 
       if (buf[0] == 0x4d) {
@@ -169,13 +144,8 @@ private:
       }
     }
 
-    if (samplingMode == SAMPLING_MODE_CONTINUOUS) {
-      currentDustLevelPM2_5 = PM2_5Value;
-      currentDustLevelPM10 = PM10Value;
-    } else {
-      currentDustLevelPM2_5 = sumDustLevelPM2_5 / validSamplesCnt;
-      currentDustLevelPM10 = sumDustLevelPM10 / validSamplesCnt;
-    }    
+    currentDustLevelPM2_5 = sumDustLevelPM2_5 / validSamplesCnt;
+    currentDustLevelPM10 = sumDustLevelPM10 / validSamplesCnt;   
   }
  
   float numericCorrectionPM2_5(float raw, float humidity) {

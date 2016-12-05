@@ -34,21 +34,12 @@ public:
     }
     
     if (targetPower > power) {
-      for (int i=max(power, 50); i<=targetPower; i++) {
-        Serial.print(targetPower); 
-        Serial.print(" -> "); 
-        Serial.println(i);        
+      for (int i=max(power, 50); i<=targetPower; i++) {   
         analogWrite(fanPwmPin, i);
-        delay(25);
+        delay(15);
       }
     } else {
-      for (int i=power; i>=targetPower; i--) {
-        Serial.print(targetPower); 
-        Serial.print(" -> "); 
-        Serial.println(i); 
-        analogWrite(fanPwmPin, i);
-        delay(25);
-      } 
+      analogWrite(fanPwmPin, targetPower);
     }
 
     power = targetPower;

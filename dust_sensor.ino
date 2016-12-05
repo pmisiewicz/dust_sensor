@@ -101,8 +101,8 @@ void loop() {
   handleLCD();  
 
   if (digitalRead(buttonPin) == HIGH) {
-    buzzer->sound(1000, 50);
-    dustSensor->nextSamplingMode();
+    buzzer->sound(1000, 25, 3);
+    //@todo
     delay(250);
   }
 
