@@ -92,7 +92,7 @@ void startSequence() {
 void loop() {  
   lightSensor->update();
     
-  rgbLed->setEnabled(!lightSensor->isNight());
+  //rgbLed->setEnabled(!lightSensor->isNight());
   buzzer->setEnabled(!lightSensor->isNight());   
 
   dustSensor->update();  
