@@ -35,10 +35,8 @@ public:
       digitalWrite(fanLedPin, LOW);    
     }
     
-    if (targetPower <= MIN_POWER) {
-      analogWrite(fanPwmPin, MIN_POWER);  
-    } else if (targetPower > power) {
-      for (int i=max(power, 50); i<=targetPower; i++) {   
+    if (targetPower > power) {
+      for (int i=max(power, MIN_POWER); i<=targetPower; i++) {   
         analogWrite(fanPwmPin, i);
         delay(15);
       }

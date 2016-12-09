@@ -102,8 +102,8 @@ void loop() {
 
   if (digitalRead(buttonPin) == HIGH) {
     buzzer->sound(1000, 25, 3);
-    //@todo
-    delay(250);
+    fan->changePower(255);
+    delay(60*1000);
   }
 
   delay(100);
