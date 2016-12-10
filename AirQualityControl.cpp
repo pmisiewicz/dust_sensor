@@ -101,7 +101,7 @@ private:
     
     if (levelPerc >= 100) {
       power = 255;  
-    } else if (levelPerc > 33) {      
+    } else if (levelPerc > 50) {      
       power = levelPerc * 255/100;  
     }
 
