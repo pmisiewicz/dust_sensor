@@ -97,12 +97,16 @@ private:
     float pm2_5Perc = pm2_5 / PM_2_5_VERY_BAD * 100.0; 
     float levelPerc = max(pm10Perc, pm2_5Perc);
 
-    byte power = 0;
+    byte power;
     
     if (levelPerc >= 100) {
       power = 255;  
-    } else if (levelPerc > 50) {      
+    } else if (fan->getPower() > 0 && levelPerc >= 40) {      
       power = levelPerc * 255/100;  
+    } else if (fan->getPower() == 0 && levelPerc >= 50) {      
+      power = levelPerc * 255/100;  
+    } else {
+      power = 0;
     }
 
     fan->changePower(power); 

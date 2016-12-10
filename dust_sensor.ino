@@ -120,7 +120,7 @@ void loop() {
   if (digitalRead(buttonPin) == HIGH) {
     buzzer->sound(1000, 25, 3);
     fan->changePower(255);
-    delay(60*1000);
+    delay(60000);
   }
 
   if (dustSensor->isSleeping() && fan->getPower() == 0) {  
