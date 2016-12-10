@@ -43,6 +43,8 @@ private:
   boolean firstRun = true;
   byte ignoredSamples = 0;  
 
+  boolean sleeping = false;
+
   PCF8574* expander;
   TemperatureSensor* temperatureSensor;
   byte sleepPin;
@@ -70,10 +72,12 @@ public:
 
   void sleep() { 
     expander->digitalWrite(sleepPin, HIGH); 
+    sleeping = true;
   }
 
   void wake() { 
     expander->digitalWrite(sleepPin, LOW); 
+    sleeping = false;
   }
 
   void setSamplingMode(byte targetMode) {
@@ -107,6 +111,10 @@ public:
     } else {
       wake();
     }
+  }
+
+  boolean isSleeping() {
+    return sleeping;
   }
 
   void onSerialEvent() {

@@ -18,6 +18,8 @@
 #define buttonPin 7
 #define dhtPin 8
 #define fanPwmPin 10
+#define relayPowerPin 11
+#define relayFanPin 12
 #define fanLedPin 13
 
 // Expander pins
@@ -34,7 +36,7 @@ PCF8574* expander = new PCF8574();
 
 TemperatureSensor* temperatureSensor = new TemperatureSensor(dhtPin);
 DustSensor* dustSensor = new DustSensor(expander, temperatureSensor, dustSensorSleepPin);
-Fan* fan = new Fan(expander, fanPwmPin, fanLedPin);
+Fan* fan = new Fan(expander, fanPwmPin, fanLedPin, relayPowerPin);
 LCD* lcd = new LCD(lcdDataPin, lcdLatchPin, lcdClockPin, lcdLightPin);
 RGBLed* rgbLed = new RGBLed(expander, redPin, greenPin, bluePin);
 Buzzer* buzzer = new Buzzer(buzzerPin);
@@ -63,6 +65,12 @@ void setup() {
 
   pinMode(buttonPin, INPUT);
 
+  pinMode(relayPowerPin, OUTPUT);
+  digitalWrite(relayPowerPin, LOW); 
+
+  pinMode(relayFanPin, OUTPUT);
+  digitalWrite(relayFanPin, LOW); 
+
   expander->pinMode(redPin, OUTPUT);
   expander->pinMode(greenPin, OUTPUT);
   expander->pinMode(bluePin, OUTPUT);
@@ -75,6 +83,8 @@ void setup() {
 
 void startSequence() {
   rgbLed->pink();
+
+  digitalWrite(relayFanPin, HIGH); 
 
   lcd->setNormalBrightness();
   lcd->setCursor(0, 0);
@@ -99,6 +109,12 @@ void loop() {
   temperatureSensor->update();
   airQualityControl->update();   
   handleLCD();  
+
+  if (!dustSensor->isSleeping() || fan->getPower() > 0) {
+    digitalWrite(relayFanPin, HIGH);   
+  } else {
+    digitalWrite(relayFanPin, LOW); 
+  }
 
   if (digitalRead(buttonPin) == HIGH) {
     buzzer->sound(1000, 25, 3);

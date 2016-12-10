@@ -14,14 +14,20 @@ private:
   PCF8574* expander;
   byte fanPwmPin;
   byte fanLedPin;
+  byte relayPowerPin;
   
   byte power = 0;
 
 public:
-  Fan(PCF8574* expanderm, byte fanPwmPin, byte fanLedPin) { 
+  Fan(PCF8574* expanderm, byte fanPwmPin, byte fanLedPin, byte relayPowerPin) { 
     this->expander = expander;
     this->fanPwmPin = fanPwmPin;
     this->fanLedPin = fanLedPin;
+    this->relayPowerPin = relayPowerPin;
+  }
+
+  byte getPower() {
+    return power;
   }
 
   void changePower(byte targetPower) {
@@ -30,8 +36,11 @@ public:
     }   
     
     if (targetPower > 0) {
+      digitalWrite(relayPowerPin, HIGH);
       digitalWrite(fanLedPin, HIGH);  
+      delay(100);
     } else {
+      digitalWrite(relayPowerPin, LOW);
       digitalWrite(fanLedPin, LOW);    
     }
     
