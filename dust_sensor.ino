@@ -1,4 +1,5 @@
 #include <PCF8574.h>
+#include <Narcoleptic.h>
 
 #include "DustSensor.cpp"
 #include "AirQualityControl.cpp"
@@ -122,7 +123,11 @@ void loop() {
     delay(60*1000);
   }
 
-  delay(100);
+  if (dustSensor->isSleeping() && fan->getPower() == 0) {  
+    Narcoleptic.delay(10000);
+  } else {
+    delay(100);  
+  }
 }
 
 void serialEvent() {
@@ -131,7 +136,7 @@ void serialEvent() {
 
 void handleLCD() {
   if (lightSensor->isNight()) {
-    lcd->setLowBrightness();
+    lcd->lightOff();
   } else {
     lcd->setNormalBrightness();
   }

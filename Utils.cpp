@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Narcoleptic.h>
 
 #ifndef UTILS_CPP
 #define UTILS_CPP
@@ -16,7 +17,7 @@ inline void sort(byte a[], byte size) {
 }
 
 inline unsigned long timeMillis() {
-  return millis() + 3600000ul;
+  return millis() + Narcoleptic.millis() + 3600000ul;
 }
 
 // values have to be > 0

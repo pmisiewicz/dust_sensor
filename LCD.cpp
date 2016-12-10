@@ -55,10 +55,6 @@ public:
     analogWrite(lightPin, brightness);  
   }
 
-  void setLowBrightness() {
-    analogWrite(lightPin, 5);  
-  }
-
   void lightOff() {
     analogWrite(lightPin, 0);
   }
